@@ -11,8 +11,6 @@ services:
       - coolify
     ports:
       - "25:25"      # SMTP (requis pour recevoir les mails)
-      - "80:80"      # HTTP (Let's Encrypt & redirection)
-      - "443:443"    # HTTPS (webmail, administration)
       - "110:110"    # POP3
       - "143:143"    # IMAP
       - "587:587"    # SMTP Submission (clients)
