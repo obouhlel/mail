@@ -1,31 +1,39 @@
+version: "3.9"
+
 services:
-  app:
+  mailserver:
     image: analogic/poste.io
     container_name: mailserver
     hostname: mail
     domainname: obouhlel.xyz
+    restart: always
     networks:
       - coolify
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.posteio.rule=Host(`mail.obouhlel.xyz`)"
-      - "traefik.http.routers.posteio.entrypoints=web"
-      - "traefik.http.services.posteio.loadbalancer.server.port=80"
+    ports:
+      - "25:25"      # SMTP (requis pour recevoir les mails)
+      - "80:80"      # HTTP (Let's Encrypt & redirection)
+      - "443:443"    # HTTPS (webmail, administration)
+      - "110:110"    # POP3
+      - "143:143"    # IMAP
+      - "587:587"    # SMTP Submission (clients)
+      - "993:993"    # IMAPS
+      - "995:995"    # POP3S
+      - "4190:4190"  # Sieve (filtrage de mail, optionnel)
+    environment:
+      - TZ=Europe/Paris
     volumes:
       - /opt/data/mail:/data
       - /opt/data/mail/webmail/plugins:/opt/www/webmail/plugins
       - /opt/data/mail/webmail/config:/opt/www/webmail/config
       - /etc/localtime:/etc/localtime:ro
-    environment:
-      - TZ=Europe/Paris
-      - HTTPS=OFF
-      - DISABLE_CLAMAV=FALSE
-    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailserver.rule=Host(`mail.obouhlel.xyz`)"
+      - "traefik.http.routers.mailserver.entrypoints=http,https"
+      - "traefik.http.routers.mailserver.tls=true"
+      - "traefik.http.routers.mailserver.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mailserver.loadbalancer.server.port=80"
 
 networks:
   coolify:
     external: true
-
-volumes:
-  data:
-    driver: local
