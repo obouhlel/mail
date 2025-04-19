@@ -26,11 +26,11 @@ services:
       - /etc/localtime:/etc/localtime:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mailserver.rule=Host(`mail.obouhlel.xyz`)"
-      - "traefik.http.routers.mailserver.entrypoints=http,https"
-      - "traefik.http.routers.mailserver.tls=true"
-      - "traefik.http.routers.mailserver.tls.certresolver=letsencrypt"
-      - "traefik.http.services.mailserver.loadbalancer.server.port=80"
+      - "traefik.http.routers.posteio.rule=Host(`mail.obouhlel.xyz`)"
+      - "traefik.http.routers.posteio.entrypoints=http,https"
+      - "traefik.http.routers.posteio.tls=true"
+      - "traefik.http.routers.posteio.tls.certresolver=letsencrypt"
+      - "traefik.http.services.posteio.loadbalancer.server.port=80"
 
 networks:
   coolify:
