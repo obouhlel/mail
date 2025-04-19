@@ -31,8 +31,10 @@ services:
       - "traefik.http.routers.posteio.tls=true"
       - "traefik.http.routers.posteio.tls.certresolver=letsencrypt"
       - "traefik.http.services.posteio.loadbalancer.server.port=80"
-      - "traefik.http.middlewares.force-https-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.posteio.middlewares=force-https-headers"
+      - "traefik.http.middlewares.posteio-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.posteio-headers.headers.customrequestheaders.X-Forwarded-Ssl=on"
+      - "traefik.http.routers.posteio.middlewares=posteio-headers"
+
 
 networks:
   coolify:
