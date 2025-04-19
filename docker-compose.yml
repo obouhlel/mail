@@ -22,6 +22,10 @@ services:
       - DISABLE_CLAMAV=FALSE
     restart: always
 
+networks:
+  web:
+    external: true
+
 volumes:
   data:
     driver: local
