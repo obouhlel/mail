@@ -5,7 +5,7 @@ services:
     hostname: mail
     domainname: obouhlel.xyz
     networks:
-      - web
+      - coolify
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.posteio.rule=Host(`mail.obouhlel.xyz`)"
@@ -23,7 +23,7 @@ services:
     restart: always
 
 networks:
-  web:
+  coolify:
     external: true
 
 volumes:
