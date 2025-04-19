@@ -20,10 +20,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=Europe/Paris
-      - HTTPS=OFF
+      - HTTPS=ON
       - VIRTUAL_HOST=mail.obouhlel.xyz
-      - VIRTUAL_PORT=80
-      - DISABLE_CLAMAV=FALSE
     restart: always
 
 volumes:
