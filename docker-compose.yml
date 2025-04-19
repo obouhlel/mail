@@ -4,9 +4,6 @@ services:
     container_name: mailserver
     hostname: mail
     domainname: obouhlel.xyz
-    dns:
-      - 1.1.1.1
-      - 1.0.0.1
     ports:
       - "25:25"
       - "465:465"
@@ -15,9 +12,6 @@ services:
       - "993:993"
     volumes:
       - /opt/data/mail:/data
-      - /opt/data/mail/webmail/plugins:/opt/www/webmail/plugins
-      - /opt/data/mail/webmail/config:/opt/www/webmail/config
-      - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=Europe/Paris
       - HTTPS=ON
