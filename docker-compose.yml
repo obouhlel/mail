@@ -10,15 +10,16 @@ services:
     networks:
       - coolify
     ports:
-      - "25:25"      # SMTP (requis pour recevoir les mails)
-      - "110:110"    # POP3
-      - "143:143"    # IMAP
-      - "587:587"    # SMTP Submission (clients)
-      - "993:993"    # IMAPS
-      - "995:995"    # POP3S
-      - "4190:4190"  # Sieve (filtrage de mail, optionnel)
+      - "25:25"
+      - "110:110"
+      - "143:143"
+      - "587:587"
+      - "993:993"
+      - "995:995"
     environment:
       - TZ=Europe/Paris
+      - DISABLE_CLAMAV=TRUE
+      - DISABLE_LETSENCRYPT=TRUE 
     volumes:
       - /opt/data/mail:/data
       - /opt/data/mail/webmail/plugins:/opt/www/webmail/plugins
@@ -26,15 +27,30 @@ services:
       - /etc/localtime:/etc/localtime:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.posteio.rule=Host(`mail.obouhlel.xyz`)"
-      - "traefik.http.routers.posteio.entrypoints=http,https"
-      - "traefik.http.routers.posteio.tls=true"
-      - "traefik.http.routers.posteio.tls.certresolver=letsencrypt"
-      - "traefik.http.services.posteio.loadbalancer.server.port=80"
-      - "traefik.http.middlewares.posteio-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.posteio-headers.headers.customrequestheaders.X-Forwarded-Ssl=on"
-      - "traefik.http.routers.posteio.middlewares=posteio-headers"
+      
+      # HTTP
+      - "traefik.http.routers.mailserver.entrypoints=web"
+      - "traefik.http.routers.mailserver.rule=Host(`mail.obouhlel.xyz`)"
+      - "traefik.http.routers.mailserver.service=mailserver"
+      - "traefik.http.services.mailserver.loadbalancer.server.port=80"
+      
+      # HTTPS
+      - "traefik.http.routers.mailserver-secure.entrypoints=websecure"
+      - "traefik.http.routers.mailserver-secure.rule=Host(`mail.obouhlel.xyz`)"
+      - "traefik.http.routers.mailserver-secure.service=mailserver"
+      - "traefik.http.routers.mailserver-secure.tls=true"
+      - "traefik.http.routers.mailserver-secure.tls.certresolver=le"
 
+      # Mail ports
+      - "traefik.tcp.routers.smtp.entrypoints=smtp"
+      - "traefik.tcp.routers.smtp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.smtp.service=smtp"
+      - "traefik.tcp.services.smtp.loadbalancer.server.port=25"
+
+      - "traefik.tcp.routers.smtps.entrypoints=smtps"
+      - "traefik.tcp.routers.smtps.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.smtps.service=smtps"
+      - "traefik.tcp.services.smtps.loadbalancer.server.port=465"
 
 networks:
   coolify:
